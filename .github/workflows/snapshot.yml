@@ -1,0 +1,48 @@
+name: TSM public snapshots
+
+# Hourly: save any new TSM public snapshot for Normal-Alliance and the US region.
+# Snapshots live on the "data" branch, rewritten as one commit each time so the
+# repository only ever holds the last 30 days.
+on:
+  schedule:
+    - cron: "40 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snapshot
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get the saved snapshots
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git clone --quiet --depth 1 --branch data \
+            "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" data \
+            || mkdir -p data
+
+      - name: Save new snapshots
+        id: fetch
+        run: python3 fetch.py data
+
+      - name: Publish
+        if: steps.fetch.outputs.changed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd data
+          rm -rf .git
+          git init --quiet -b data
+          git add -A
+          git -c user.name="snapshot job" -c user.email="actions@users.noreply.github.com" \
+            commit --quiet -m "Snapshots as of $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push --quiet --force \
+            "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" data
