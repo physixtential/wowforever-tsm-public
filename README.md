@@ -1,6 +1,6 @@
 # WoW Forever TSM public snapshots
 
-An hourly GitHub Actions job (`.github/workflows/snapshot.yml`) runs `fetch.py`,
+A GitHub Actions job, every 30 minutes, (`.github/workflows/snapshot.yml`) runs `fetch.py`,
 which saves each new snapshot of TradeSkillMaster's free public pricing files
 for WoW Forever (realm Normal, Alliance auction house, and the US region) to
 the `data` branch, as `realm/normal-alliance/<epoch>.csv.gz` and
