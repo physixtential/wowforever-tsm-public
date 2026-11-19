@@ -1,4 +1,4 @@
-"""Save TSM's public WoW Forever pricing files, run hourly by GitHub Actions.
+"""Save TSM's public WoW Forever pricing files, run every 5 minutes by GitHub Actions.
 
 TradeSkillMaster publishes the latest snapshot of each auction house and
 region as a CSV (https://tradeskillmaster.com/public-data); nothing keeps the

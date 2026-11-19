@@ -1,15 +1,16 @@
 name: TSM public snapshots
 
-# Every 30 minutes (at :10 and :40, off GitHub's busy :00): save any new TSM
-# public snapshot for Normal-Alliance and the US region. Hourly was too sparse:
-# GitHub started only 6 of 44 scheduled runs (Nov 15-17), and each public
-# snapshot is only available for about 3 hours. At most 1,440 minutes a month,
-# within the private repo's 2,000 free.
+# Every 5 minutes (GitHub's shortest schedule): save any new TSM public
+# snapshot for Normal-Alliance and the US region. TSM replaces the realm file
+# only every 3 hours, so one started run in each 3-hour window catches it; but
+# GitHub starts only some scheduled runs (every 30 minutes gave about 3 runs a
+# day, Nov 15-19, and missed 4 snapshots), hence asking as often as allowed.
+# The repository is public (2026-11-19), so Actions minutes are free.
 # Snapshots live on the "data" branch, rewritten as one commit each time so the
 # repository only ever holds the last 30 days.
 on:
   schedule:
-    - cron: "10,40 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:
